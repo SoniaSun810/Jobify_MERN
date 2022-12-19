@@ -16,11 +16,12 @@ import jobsRouter from "./routes/jobsRoutes.js";
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
+import authenticateUser from "./middleware/auth.js";
 
 app.use(express.json())
 
 app.use('/api/v1/auth', authRouter)
-app.use('/api/v1/jobs', jobsRouter)
+app.use('/api/v1/jobs',authenticateUser, jobsRouter)
 
 app.get("/", (req, res) => {
   res.send("Welcome!");
