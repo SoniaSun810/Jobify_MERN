@@ -3,24 +3,22 @@ import { FormRow, Alert } from "../../components";
 import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 
-
-const Profile = (e) => {
+const Profile = () => {
   const { user, showAlert, displayAlert, updateUser, isLoading } =
-    useAppContext;
+  useAppContext();
 
-  const [name, setName] = useState(user?.name);
-  const [email, setEmail] = useState(user?.email);
-  const [lastName, setLastName] = useState(user?.lastName);
-  const [location, setLocation] = useState(user?.location);
+    const [name, setName] = useState(user?.name)
+    const [email, setEmail] = useState(user?.email)
+    const [lastName, setLastName] = useState(user?.lastName)
+    const [location, setLocation] = useState(user?.location)
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // remove while testing
-    if(!name || !email || !lastName || !location) {
-      displayAlert()
-      return 
+    if (!name || !email || !lastName || !location) {
+      displayAlert();
+      return;
     }
-    updateUser({name, email, lastName, location})
+    updateUser({ name, email, lastName, location });
   };
 
   return (
@@ -33,29 +31,29 @@ const Profile = (e) => {
             type="text"
             name="name"
             value={name}
-            handleChange={() => setName(e.target.value)}
+            handleChange={(e) => setName(e.target.value)}
           />
           <FormRow
             type="text"
+            labelText="last name"
             name="lastName"
-            labelText='last name'
             value={lastName}
-            handleChange={() => setLastName(e.target.value)}
+            handleChange={(e) => setLastName(e.target.value)}
           />
           <FormRow
             type="email"
             name="email"
             value={email}
-            handleChange={() => setEmail(e.target.value)}
+            handleChange={(e) => setEmail(e.target.value)}
           />
           <FormRow
             type="text"
             name="location"
             value={location}
-            handleChange={() => setLocation(e.target.value)}
+            handleChange={(e) => setLocation(e.target.value)}
           />
           <button className="btn btn-block" type="submit" disabled={isLoading}>
-            {isLoading? 'Please Wait...' : 'save changes'}
+            {isLoading ? "Please Wait..." : "save changes"}
           </button>
         </div>
       </form>
