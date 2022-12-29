@@ -1,8 +1,9 @@
-import { useAppContext } from "../context/appContext";
+
 import { useEffect } from "react";
 import Loading from "./Loading";
 import Job from "./Job";
 import Wrapper from "../assets/wrappers/JobsContainer";
+import { useAppContext } from '../context/appContext';
 
 const JobContainer = () => {
   const { getJobs, jobs, isLoading, totalJobs } = useAppContext();
