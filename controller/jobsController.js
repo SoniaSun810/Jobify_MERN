@@ -20,7 +20,41 @@ const createJob = async (req, res) => {
 };
 
 const getAllJobs = async (req, res) => {
-  const jobs = await Job.find({ createdBy: req.user.userId });
+  const { status, jobType, sort, search } = req.query;
+
+  const queryObject = {
+    createdBy: req.user.userId,
+  };
+  // add stuff based on condition
+  if (status && status !== "all") {
+    queryObject.status = status;
+  }
+  if (jobType && jobType !== "all") {
+    queryObject.jobType = jobType;
+  }
+  if (search) {
+    queryObject.position = { $regex: search, $options: "i" };
+  }
+  
+  // NO AWAIT
+  let result = Job.find(queryObject);
+  // Chain sort conditions
+  if(sort === 'latest'){
+    result = result.sort('-createdAt')
+  }
+  if(sort === 'oldest'){
+    result = result.sort('createdAt')
+  }
+  if(sort === 'a-z'){
+    result = result.sort('position')
+  }
+  if(sort === 'z-a'){
+    result = result.sort('-position')
+  }
+
+
+  const jobs = await result;
+
   res
     .status(StatusCodes.OK)
     .json({ jobs, totalJobs: jobs.length, numOfPages: 1 });
@@ -28,14 +62,15 @@ const getAllJobs = async (req, res) => {
 
 const updateJob = async (req, res) => {
   const { id: jobId } = req.params;
-  const { company, position, jobLocation } = req.body;
+  const { company, position } = req.body;
+
   if (!position || !company) {
     throw new BadRequestError("Please provide all values");
   }
   const job = await Job.findOne({ _id: jobId });
 
   if (!job) {
-    throw new NotFoundError(`No job with id : ${jobId}`);
+    throw new NotFoundError(`No job with id :${jobId}`);
   }
   // check permissions
   checkPermissions(req.user, job.createdBy);
@@ -104,7 +139,7 @@ const showStats = async (req, res) => {
       .month(month - 1)
       .year(year)
       .format("MMM Y");
-      return {date, count}
+    return { date, count };
   });
 
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
