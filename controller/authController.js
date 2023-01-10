@@ -18,6 +18,8 @@ const register = async (req, res, next) => {
 
   const user = await User.create({ name, email, password });
   const token = user.createJWT();
+  attachCookie({res, token})
+
   res
     .status(StatusCodes.OK)
     .json({
@@ -66,6 +68,8 @@ const updateUser = async (req, res) => {
 
   await user.save()
   const token = user.createJWT()
+  attachCookie({res, token})
+
   res.status(StatusCodes.OK).json({ user, token, location: user.location });
 };
 
