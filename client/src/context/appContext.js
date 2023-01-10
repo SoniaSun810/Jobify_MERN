@@ -36,7 +36,7 @@ import {
   CLEAR_FILTERS,
   CHANGE_PAGE,
 } from "./actions";
-import { disconnect } from "mongoose";
+
 
 const token = localStorage.getItem("token");
 const user = localStorage.getItem("user");
